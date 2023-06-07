@@ -100,6 +100,10 @@ class UniclassTables:
             getattr(self, table).data.set_index("Code")["description"].to_dict()[code]
         )
 
+    def get_title(self, code):
+        table = get_table_from_code(code)
+        return getattr(self, table).data.set_index("Code")["Title"].to_dict()[code]
+
     def get_codes_containing(self, code):
         table = get_table_from_code(code)
         return [l for l in getattr(self, table).codes if code in l]
