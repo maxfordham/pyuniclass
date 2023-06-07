@@ -12,7 +12,7 @@ if "FDIR_UNICLASS" in os.environ:
     FDIR_UNICLASS = os.environ["FDIR_UNICLASS"]
 
 
-MAP_TABLE_DESCRIPTIONS = dict( # frozenmap(
+MAP_TABLE_DESCRIPTIONS = dict(  # frozenmap(
     {
         "Ac": "Activities",
         "Co": "Complexes",
@@ -29,13 +29,7 @@ MAP_TABLE_DESCRIPTIONS = dict( # frozenmap(
     }
 )
 
-MAP_CODE_LENGTH = dict( #frozenmap(
-    {
-        "groups": 5, 
-        "subgroups":8,
-        "objects":11
-    }
-)
+MAP_CODE_LENGTH = dict({"groups": 5, "subgroups": 8, "objects": 11})  # frozenmap(
 
 
 def table_from_file(table_code: str) -> pd.DataFrame:
@@ -46,40 +40,43 @@ def table_from_file(table_code: str) -> pd.DataFrame:
 def table_description_from_code(code):
     return f"{code} - {MAP_TABLE_DESCRIPTIONS[code]}"
 
+
 class UniclassTable:
     def __init__(self, code, fn_getdata=table_from_file):
         self.code = code
         self.description = table_description_from_code(code)
         self.data = fn_getdata(self.code)
-        self.data["description"] = self.data["Code"] + " - " + self.data["Title"] 
+        self.data["description"] = self.data["Code"] + " - " + self.data["Title"]
 
     @property
     def codes(self):
         return self.data.Code.to_list()
-    
+
     @property
     def groups(self):
-        mask = (self.data['Code'].str.len() == 5)
+        mask = self.data["Code"].str.len() == 5
         return self.data[mask]
-    
+
     @property
     def li_groups(self):
         return self.groups.description.to_list()
-        
-    
+
     def subgroups(self, code):
-        mask = self.data.query(f"Code == {code}")['Code'].str.len() == 8
+        mask = self.data.query(f"Code == {code}")["Code"].str.len() == 8
         return self.data[mask]
+
 
 def get_table_from_code(code):
     table = code[0:2]
     if table not in MAP_TABLE_DESCRIPTIONS.keys():
-        raise ValueError(f"{table} must be in {str(list(MAP_TABLE_DESCRIPTIONS.keys()))}")
+        raise ValueError(
+            f"{table} must be in {str(list(MAP_TABLE_DESCRIPTIONS.keys()))}"
+        )
     return table
+
 
 class UniclassTables:
     def __init__(self, fn_getdata=UniclassTable) -> None:
-
         self.fn_getdata = fn_getdata
         self._Ac = None
         self._Co = None
@@ -96,11 +93,13 @@ class UniclassTables:
 
     def getdata(self, code):
         return self.fn_getdata(code)
-    
+
     def get_description(self, code):
         table = get_table_from_code(code)
-        return getattr(self, table).data.set_index('Code')['description'].to_dict()[code]
-        
+        return (
+            getattr(self, table).data.set_index("Code")["description"].to_dict()[code]
+        )
+
     def get_codes_containing(self, code):
         table = get_table_from_code(code)
         return [l for l in getattr(self, table).codes if code in l]
@@ -115,7 +114,7 @@ class UniclassTables:
     def Ac(self):
         if self._Ac is None:
             self.Ac = self.getdata("Ac")
-        
+
         return self._Ac
 
     @Ac.setter
@@ -244,5 +243,6 @@ class UniclassTables:
         self._Zz = value
 
     # --------------------------------
+
 
 UT = UniclassTables()
