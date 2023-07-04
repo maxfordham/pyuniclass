@@ -104,9 +104,29 @@ class UniclassTables:
         table = get_table_from_code(code)
         return getattr(self, table).data.set_index("Code")["Title"].to_dict()[code]
 
-    def get_codes_containing(self, code):
+    def get_codes_contains(self, code):
         table = get_table_from_code(code)
         return [l for l in getattr(self, table).codes if code in l]
+
+    def get_codes_not_contains(self, code):
+        table = get_table_from_code(code)
+        return [l for l in getattr(self, table).codes if code not in l]
+
+    def get_codes_begins_with(self, code):
+        table = get_table_from_code(code)
+        return [l for l in getattr(self, table).codes if l.startswith(code)]
+
+    def get_codes_not_begins_with(self, code):
+        table = get_table_from_code(code)
+        return [l for l in getattr(self, table).codes if not l.startswith(code)]
+
+    def get_codes_ends_with(self, code):
+        table = get_table_from_code(code)
+        return [l for l in getattr(self, table).codes if l.endswith(code)]
+
+    def get_codes_not_ends_with(self, code):
+        table = get_table_from_code(code)
+        return [l for l in getattr(self, table).codes if not l.endswith(code)]
 
     # NOTE:
     # implementation below is a bit verbose but the intention is that
