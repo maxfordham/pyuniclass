@@ -1,5 +1,6 @@
-from pyuniclass import UT, get_table_from_code
+import pytest
 import pandas as pd
+from pyuniclass import UT
 
 
 def test_ut():
@@ -10,6 +11,23 @@ def test_ut():
 
 
 class TestUniclassTables:
+    def test_get_code_equal(self):
+        """Test that we can get the codes that equal a given code.
+        Also test that if a code is not found, we raise a ValueError."""
+        assert UT.get_code_equal("Pr_60_45_03") == ["Pr_60_45_03"]
+        with pytest.raises(ValueError) as err:
+            UT.get_code_equal("Pr_99_99_99")
+        assert str(err.value) == "Pr_99_99_99 not found in Pr"
+
+    def test_get_codes_not_equal(self):
+        """With an example code, get the codes that do not equal that given code,
+        and get the code that does equal that code.
+        The EQUAL code should not be in the codes that DO NOT EQUAL the given code.
+        """
+        assert UT.get_code_equal("Pr_60_45_03") not in UT.get_codes_not_equals(
+            "Pr_60_45_03"
+        )
+
     def test_get_codes_contains(self):
         """Test that we can get the codes that contain a given code."""
         assert UT.get_codes_contains("Pr_60_45_03") == [
