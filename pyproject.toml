@@ -1,17 +1,15 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "pyuniclass"
-description = ''
+description = 'Package for reading uniclass tables.'
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
 keywords = []
-authors = [
-  { name = "U.N. Owen", email = "void@some.where" },
-]
+authors = [{ name = "J. Gunstone", email = "j.gunstone@maxfordham.com" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
@@ -23,22 +21,19 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["pandas", "openpyxl"]
+dependencies = ["pandas", "openpyxl", "hatch"]
 dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/pyuniclass#readme"
-Issues = "https://github.com/unknown/pyuniclass/issues"
-Source = "https://github.com/unknown/pyuniclass"
+Documentation = "https://github.com/maxfordham/pyuniclass#readme"
+Issues = "https://github.com/maxfordham/pyuniclass/issues"
+Source = "https://github.com/maxfordham/pyuniclass"
 
 [tool.hatch.version]
-path = "src/pyuniclass/__about__.py"
+source = "vcs"
 
 [tool.hatch.envs.default]
-dependencies = [
-  "pytest",
-  "pytest-cov",
-]
+dependencies = ["pytest", "pytest-cov"]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pyuniclass --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
@@ -49,16 +44,10 @@ python = ["37", "38", "39", "310", "311"]
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = [
-  "src/pyuniclass/__about__.py",
-]
+omit = ["src/pyuniclass/__about__.py"]
 
 [tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
